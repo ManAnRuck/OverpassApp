@@ -1,0 +1,3 @@
+rootProject.name = 'OverpassApp'
+
+include ':app'
