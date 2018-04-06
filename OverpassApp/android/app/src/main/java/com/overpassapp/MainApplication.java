@@ -1,8 +1,10 @@
 package com.overpassapp;
 
+
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -11,35 +13,28 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
+public class MainApplication extends NavigationApplication {
 
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
-      );
-    }
+  public boolean isDebug() {
+    return BuildConfig.DEBUG;
+  }
 
-    @Override
-    protected String getJSMainModuleName() {
-      return "index";
-    }
-  };
+  protected List<ReactPackage> getPackages() {
+    // Add additional packages you require here
+    // No need to add RnnPackage and MainReactPackage
+    return Arrays.<ReactPackage>asList(
+            new MainReactPackage()
+    );
+  }
 
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+  public List<ReactPackage> createAdditionalReactPackages() {
+    return getPackages();
   }
 
   @Override
-  public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
+  public String getJSMainModuleName() {
+    return "index";
   }
+
 }
