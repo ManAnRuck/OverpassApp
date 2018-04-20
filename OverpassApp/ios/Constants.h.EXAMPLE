@@ -1,0 +1,18 @@
+//
+//  Constants.h
+//  OverpassApp
+//
+//  Created by Manuel Ruck on 06.04.18.
+//  Copyright © 2018 Facebook. All rights reserved.
+//
+
+
+
+// do change YOUR_GOOGLE_MAPS_API_KEY
+
+#ifndef Constants_h
+#define Constants_h
+
+#define GOOGLE_MAPS_API_KEY @"YOUR_GOOGLE_MAPS_API_KEY"
+
+#endif /* Constants_h */

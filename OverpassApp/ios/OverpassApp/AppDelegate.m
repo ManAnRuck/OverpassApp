@@ -8,6 +8,7 @@
  */
 
 #import "AppDelegate.h"
+#import "Constants.h"
 #import <React/RCTBundleURLProvider.h>
 
 // **********************************************
@@ -19,6 +20,9 @@
 // with npm ver 2. You'll need to "npm install" with npm 3 (see https://github.com/wix/react-native-navigation/issues/1)
 
 #import <React/RCTRootView.h>
+
+@import GoogleMaps;
+
 
 @implementation AppDelegate
 
@@ -52,6 +56,9 @@
    self.window.rootViewController = rootViewController;
    [self.window makeKeyAndVisible];
    */
+  
+    [GMSServices provideAPIKey:GOOGLE_MAPS_API_KEY]; // add this line using the api key obtained from Google Console
+
   
   
   return YES;
