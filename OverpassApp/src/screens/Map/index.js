@@ -4,11 +4,10 @@ import { View, Text, Platform } from "react-native";
 import MapView from "react-native-maps";
 
 import styled from "styled-components";
-import { Icon } from "react-native-elements";
+import { Icon, FormInput } from "react-native-elements";
 
 const Wrapper = styled.View`
   flex: 1;
-  background-color: red;
 `;
 
 const MenuButton = styled(Icon).attrs({
@@ -23,6 +22,18 @@ const MenuButton = styled(Icon).attrs({
   }
 })``;
 
+const OverpassQuery = styled(Icon).attrs({
+  raised: true,
+  name: "code",
+  type: "font-awesome",
+  color: "#f50",
+  containerStyle: {
+    position: "absolute",
+    right: 18,
+    bottom: 18
+  }
+})``;
+
 class Map extends Component {
   state = {
     region: {
@@ -30,7 +41,24 @@ class Map extends Component {
       longitude: -122.4324,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
-    }
+    },
+    codeVisible: true,
+    code: `
+
+[out:json][timeout:3600];
+// gather results
+
+  // query part for: “"Drinking Water"”
+//  node["amenity"="drinking_water"]({{bbox}});
+//area;
+//area[name="ประเทศไทย"]->.boundaryarea;
+//node["amenity"="drinking_water"](area.boundaryarea);
+
+node({{bbox}})["amenity"="drinking_water"];
+
+// print results
+out;
+    `
   };
 
   onRegionChange = region => {
@@ -41,11 +69,24 @@ class Map extends Component {
     return (
       <Wrapper>
         <MapView
-          style={{ width: "100%", height: "100%" }}
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
+          style={{ flex: 1 }}
+          // region={this.state.region}
+          // onRegionChange={this.onRegionChange}
+          initialRegion={this.state.region}
         />
-        <MenuButton onPress={() => console.log("hello")} />
+        <MenuButton
+          onPress={() =>
+            this.setState({
+              codeVisible: !this.state.codeVisible
+            })
+          }
+        />
+        {this.state.codeVisible && (
+          <OverpassQuery onPress={() => console.log("hello")} />
+        )}
+        {!this.state.codeVisible && (
+          <FormInput multiline={true} value={this.state.code} />
+        )}
       </Wrapper>
     );
   }
