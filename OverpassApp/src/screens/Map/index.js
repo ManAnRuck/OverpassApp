@@ -46,7 +46,7 @@ const Locate = styled(Icon).attrs({
   }
 })``;
 
-const CodeButton = styled(Icon).attrs({
+const CodeOpenButton = styled(Icon).attrs({
   raised: true,
   name: "code",
   type: "font-awesome",
@@ -65,7 +65,16 @@ const CodeWrapper = styled.View`
 
 const CodeButtonsWrapper = styled.View`
   flex-direction: row;
+  justify-content: space-between;
 `;
+
+const CodeSave = styled(Icon).attrs({
+  raised: true,
+  name: "save",
+  type: "font-awesome",
+  color: "orange",
+  size: 18
+})``;
 
 const CodeRun = styled(Icon).attrs({
   raised: true,
@@ -75,12 +84,22 @@ const CodeRun = styled(Icon).attrs({
   size: 18
 })``;
 
+const CodeClose = styled(Icon).attrs({
+  raised: true,
+  name: "times",
+  type: "font-awesome",
+  color: "red",
+  size: 18
+})``;
+
 class Map extends Component {
+  code = `[out:json][timeout:3600];
+  node({{bbox}})[amenity=drinking_water];
+  out;`;
+
   state = {
     codeVisible: false,
-    code: `[out:json][timeout:3600];
-node({{bbox}})[amenity=drinking_water];
-out;`,
+    code: this.code,
     markers: [],
     isLoading: false
   };
@@ -104,11 +123,6 @@ out;`,
   animateToCurrentLocation = ({ deltas }) => {
     return getCurrentLocation().then(position => {
       if (position) {
-        console.log(deltas, {
-          ...this.region,
-          ...position.coords,
-          ...deltas
-        });
         this.map.animateToRegion({
           ...this.region,
           ...position.coords,
@@ -164,7 +178,6 @@ out;`,
   };
 
   render() {
-    console.log(this.state.markers);
     return (
       <Wrapper>
         <MapWrapper>
@@ -199,18 +212,27 @@ out;`,
             onPress={() => this.loadData()}
             reverse={this.state.isLoading}
           />
-          <CodeButton
-            onPress={() => {
-              this.setState({ codeVisible: !this.state.codeVisible });
-            }}
-          />
+          {!this.state.codeVisible && (
+            <CodeOpenButton
+              onPress={() => {
+                this.code = this.state.code;
+                this.setState({ codeVisible: !this.state.codeVisible });
+              }}
+            />
+          )}
           <Locate onPress={this.animateToCurrentLocation} />
         </MapWrapper>
         {this.state.codeVisible && (
           <CodeWrapper>
             <TextInput
               autoFocus
-              style={{ maxHeight: 100 }}
+              style={{
+                maxHeight: 100,
+                borderWidth: 1,
+                borderRadius: 5,
+                borderColor: "lightgrey",
+                padding: 3
+              }}
               multiline={true}
               numberOfLines={4}
               value={this.state.code}
@@ -219,6 +241,7 @@ out;`,
               }}
             />
             <CodeButtonsWrapper>
+              <CodeSave />
               <CodeRun
                 onPress={() =>
                   !this.state.isLoading
@@ -226,6 +249,14 @@ out;`,
                     : Alert.alert("Query is already running!")
                 }
                 reverse={this.state.isLoading}
+              />
+              <CodeClose
+                onPress={() => {
+                  this.setState({
+                    code: this.code,
+                    codeVisible: !this.state.codeVisible
+                  });
+                }}
               />
             </CodeButtonsWrapper>
           </CodeWrapper>
