@@ -13,5 +13,10 @@ Navigation.startSingleScreenApp({
       navBarHidden: true
     }, // override the navigator style for the screen, see "Styling the navigator" below (optional)
     navigatorButtons: {} // override the nav buttons for the screen, see "Adding buttons to the navigator" below (optional)
+  },
+  drawer: {
+    left: {
+      screen: "overpass.SideMenu"
+    }
   }
 });

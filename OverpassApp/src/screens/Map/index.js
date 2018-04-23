@@ -23,6 +23,18 @@ const MapWrapper = styled.View`
 
 const MenuButton = styled(Icon).attrs({
   raised: true,
+  name: "bars",
+  type: "font-awesome",
+  color: "#f50",
+  containerStyle: {
+    position: "absolute",
+    left: 18,
+    top: Platform.OS === "ios" ? 24 : 18
+  }
+})``;
+
+const LoadDataButton = styled(Icon).attrs({
+  raised: true,
   name: "refresh",
   type: "font-awesome",
   color: "#f50",
@@ -223,6 +235,13 @@ out;`;
             ))}
           </MapView>
           <MenuButton
+            onPress={() => {
+              this.props.navigator.toggleDrawer({
+                side: "left"
+              });
+            }}
+          />
+          <LoadDataButton
             onPress={() => this.loadData()}
             reverse={this.state.isLoading}
           />
