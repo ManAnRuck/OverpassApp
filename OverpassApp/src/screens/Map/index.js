@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, Alert, TextInput } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 import styled from "styled-components";
@@ -10,7 +10,10 @@ import ClusteredMapView from "react-native-maps-super-cluster";
 
 import getCurrentLocation from "../../utils/getCurrentLocation";
 
-const Wrapper = styled.View`
+const Wrapper = styled.KeyboardAvoidingView.attrs({
+  behavior: "padding",
+  enabled: true
+})`
   flex: 1;
 `;
 
@@ -59,6 +62,18 @@ const CodeWrapper = styled.View`
   padding-horizontal: 11;
   padding-vertical: 11;
 `;
+
+const CodeButtonsWrapper = styled.View`
+  flex-direction: row;
+`;
+
+const CodeRun = styled(Icon).attrs({
+  raised: true,
+  name: "play",
+  type: "font-awesome",
+  color: "green",
+  size: 18
+})``;
 
 class Map extends Component {
   state = {
@@ -193,13 +208,26 @@ out;`,
         </MapWrapper>
         {this.state.codeVisible && (
           <CodeWrapper>
-            <FormInput
+            <TextInput
+              autoFocus
+              style={{ maxHeight: 100 }}
               multiline={true}
+              numberOfLines={4}
               value={this.state.code}
               onChangeText={code => {
                 this.setState({ code });
               }}
             />
+            <CodeButtonsWrapper>
+              <CodeRun
+                onPress={() =>
+                  !this.state.isLoading
+                    ? this.loadData()
+                    : Alert.alert("Query is already running!")
+                }
+                reverse={this.state.isLoading}
+              />
+            </CodeButtonsWrapper>
           </CodeWrapper>
         )}
       </Wrapper>
