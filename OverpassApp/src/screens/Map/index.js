@@ -94,8 +94,8 @@ const CodeClose = styled(Icon).attrs({
 
 class Map extends Component {
   code = `[out:json][timeout:3600];
-  node({{bbox}})[amenity=drinking_water];
-  out;`;
+node({{bbox}})[amenity=drinking_water];
+out;`;
 
   state = {
     codeVisible: false,
@@ -148,12 +148,15 @@ class Map extends Component {
 
     let code = this.state.code;
     code = code.replace("{{bbox}}", bbox);
-    code = code.replace(/(\r\n\t|\n|\r\t)/gm, "");
+    code = code.replace(/(\r\n\t|\n|\r\t|\s)/gm, "");
 
     const data = await fetch(
       `https://lz4.overpass-api.de/api/interpreter?${code}`
     )
       .then(response => {
+        if (!response.ok) {
+          throw response.status;
+        }
         return response.json();
       })
       .then(responseJson => {
@@ -173,7 +176,18 @@ class Map extends Component {
         return responseJson.elements;
       })
       .catch(error => {
-        console.error(error);
+        switch (error) {
+          case 400:
+            Alert.alert("Bad Request");
+            break;
+
+          default:
+            Alert.alert(`Status code: ${error}`);
+            break;
+        }
+        this.setState({
+          isLoading: false
+        });
       });
   };
 
@@ -237,11 +251,19 @@ class Map extends Component {
               numberOfLines={4}
               value={this.state.code}
               onChangeText={code => {
-                this.setState({ code });
+                this.setState({ isLoading: true, code }, () => {
+                  this.setState({ isLoading: false });
+                });
               }}
             />
             <CodeButtonsWrapper>
-              <CodeSave />
+              <CodeSave
+                onPress={() => {
+                  this.setState({
+                    codeVisible: !this.state.codeVisible
+                  });
+                }}
+              />
               <CodeRun
                 onPress={() =>
                   !this.state.isLoading
