@@ -234,26 +234,32 @@ out;`;
               />
             ))}
           </MapView>
-          <MenuButton
-            onPress={() => {
-              this.props.navigator.toggleDrawer({
-                side: "left"
-              });
-            }}
-          />
-          <LoadDataButton
-            onPress={() => this.loadData()}
-            reverse={this.state.isLoading}
-          />
-          {!this.state.codeVisible && (
+          {!this.state.codeVisible && [
+            <MenuButton
+              key="menuButton"
+              onPress={() => {
+                this.props.navigator.toggleDrawer({
+                  side: "left"
+                });
+              }}
+            />,
+            <LoadDataButton
+              key="loadButton"
+              onPress={() => this.loadData()}
+              reverse={this.state.isLoading}
+            />,
             <CodeOpenButton
+              key="codeOpenButton"
               onPress={() => {
                 this.code = this.state.code;
                 this.setState({ codeVisible: !this.state.codeVisible });
               }}
+            />,
+            <Locate
+              key="locateButton"
+              onPress={this.animateToCurrentLocation}
             />
-          )}
-          <Locate onPress={this.animateToCurrentLocation} />
+          ]}
         </MapWrapper>
         {this.state.codeVisible && (
           <CodeWrapper>
