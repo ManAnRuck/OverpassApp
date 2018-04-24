@@ -5,6 +5,12 @@ import { Switch } from "react-native";
 
 const Wrapper = styled.ScrollView`
   flex: 1;
+  padding-top: 18;
+  padding-horizontal: 11;
+`;
+
+const Title = styled.Text`
+  font-size: 24;
 `;
 
 class SideMenu extends Component {
@@ -22,6 +28,7 @@ class SideMenu extends Component {
   render() {
     return (
       <Wrapper>
+        <Title>OverpassApp</Title>
         <List>
           {this.list.map((item, i) => (
             <ListItem
