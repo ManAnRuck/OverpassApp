@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { List, ListItem } from "react-native-elements";
 import { Switch } from "react-native";
+import { graphql, compose } from "react-apollo";
+
+import UPDATE_EXPERT_MODE_CLIENT from "../../graphql/state/mutations/updateExpertMode";
+import GET_EXPERT_MODE_CLIENT from "../../graphql/state/queries/getExpertMode";
 
 const Wrapper = styled.ScrollView`
   flex: 1;
@@ -26,6 +30,7 @@ class SideMenu extends Component {
     }
   ];
   render() {
+    const { updateExpertMode, isExpert } = this.props;
     return (
       <Wrapper>
         <Title>OverpassApp</Title>
@@ -43,8 +48,8 @@ class SideMenu extends Component {
             title="Experte"
             rightIcon={
               <Switch
-                value={this.state.expert}
-                onValueChange={expert => this.setState({ expert })}
+                value={isExpert}
+                onValueChange={isExpert => updateExpertMode(isExpert)}
               />
             }
           />
@@ -54,4 +59,23 @@ class SideMenu extends Component {
   }
 }
 
-export default SideMenu;
+export default compose(
+  graphql(UPDATE_EXPERT_MODE_CLIENT, {
+    props: ({ mutate }) => {
+      return {
+        updateExpertMode: isExpert => mutate({ variables: { isExpert } })
+      };
+    }
+  }),
+  graphql(GET_EXPERT_MODE_CLIENT, {
+    props: ({
+      data: {
+        expertMode: { isExpert }
+      }
+    }) => {
+      return {
+        isExpert
+      };
+    }
+  })
+)(SideMenu);
