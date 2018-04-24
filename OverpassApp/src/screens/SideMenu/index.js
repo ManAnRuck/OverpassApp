@@ -11,6 +11,7 @@ const Wrapper = styled.ScrollView`
   flex: 1;
   padding-top: 18;
   padding-horizontal: 11;
+  background-color: rgba(255, 255, 255, 1);
 `;
 
 const Title = styled.Text`
